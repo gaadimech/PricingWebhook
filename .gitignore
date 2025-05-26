@@ -66,4 +66,11 @@ instance/
 htmlcov/
 
 # Heroku
-.heroku/ 
+.heroku/
+
+# Large CSV file (we use optimized JSON instead)
+GM Pricing March Website Usage -Final.csv
+
+# Downloaded files
+heroku.tar.gz
+heroku/ 
