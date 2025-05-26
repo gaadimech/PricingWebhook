@@ -162,12 +162,17 @@ def get_price():
                 "message": "Pricing data could not be loaded"
             }), 500
         
-        # Fast O(1) lookup
-        fuel_key = fuel_type.lower()
+        # Fast O(1) lookup - find exact fuel type match (case-insensitive)
+        fuel_key = None
+        for available_fuel in pricing_data['data'].keys():
+            if fuel_type.lower() == available_fuel.lower():
+                fuel_key = available_fuel
+                break
+        
         brand_key = car_manufacturer.lower()
         model_key = car_model.lower()
         
-        if (fuel_key in pricing_data['data'] and 
+        if (fuel_key and fuel_key in pricing_data['data'] and 
             brand_key in pricing_data['data'][fuel_key] and
             model_key in pricing_data['data'][fuel_key][brand_key]):
             
