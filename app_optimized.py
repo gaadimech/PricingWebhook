@@ -78,7 +78,29 @@ def create_optimized_data():
 try:
     with open('pricing_data.json', 'r') as f:
         pricing_data = json.load(f)
-    print(f"✅ Loaded optimized data: {pricing_data['total_records']} records")
+    
+    # Calculate stats from the new structure
+    total_records = sum(
+        sum(len(models) for models in brands.values()) 
+        for brands in pricing_data['data'].values()
+    )
+    
+    # Extract unique brands and fuel types
+    brands = set()
+    fuel_types = list(pricing_data['data'].keys())
+    
+    for fuel_data in pricing_data['data'].values():
+        for brand_data in fuel_data.values():
+            for model_data in brand_data.values():
+                brands.add(model_data['original_brand'])
+    
+    # Add metadata to pricing_data for compatibility
+    pricing_data['total_records'] = total_records
+    pricing_data['brands'] = sorted(list(brands))
+    pricing_data['fuel_types'] = fuel_types
+    
+    print(f"✅ Loaded optimized data: {total_records} records, {len(brands)} brands, {len(fuel_types)} fuel types")
+    
 except FileNotFoundError:
     print("📦 Creating optimized data structure...")
     pricing_data = create_optimized_data()
